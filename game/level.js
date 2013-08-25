@@ -27,7 +27,7 @@ define([ "spaceobject", "enemyship", "asteroid", "background" ], function(SpaceO
                 objects.push(e);
                 if(i > 0)
                     constraints.push(new CANNON.DistanceConstraint(
-                            objects[i].body, objects[i-1].body, 10, 1000));
+                            objects[i].body, objects[i-1].body, 5, 1000));
             }
             for(var i=0; i<constraints.length; i++)
                 G.world.addConstraint(constraints[i]);
@@ -43,37 +43,37 @@ define([ "spaceobject", "enemyship", "asteroid", "background" ], function(SpaceO
                 objects.push(o);
 
             }
-            for ( var i = 0; i < 50; i++) {
-                var o = new SpaceObject();
-                do{
-                    o.body.position.x = (Math.random() - 0.5) * 100;
-                    o.body.position.y = (Math.random() - 1) * 100;
-                } while (Math.abs(o.body.position.x) < 20 && Math.abs(o.body.position.y) < 20 )
-                
-                o.body.velocity = (new cv3(Math.random() * 10, Math.random() * 10, 0));
-                objects.push(o);
-            }
-            
-            
-            for ( var i = 0; i < 20; i++) {
-                var o = new SpaceObject();
-                do{
-                    o.body.position.x = (Math.random() - 2) * 100;
-                    o.body.position.y = (Math.random() - 0.5) * 100;
-                } while (Math.abs(o.body.position.x) < 20 && Math.abs(o.body.position.y) < 20 )
-                o.body.velocity = (new cv3(Math.random() * 100, Math.random() * 10, 0));
-                objects.push(o);
-            }
-            
-            for ( var i = 0; i < 20; i++) {
-                var o = new SpaceObject();
-                do{
-                    o.body.position.x = (Math.random() + 4) * 100;
-                    o.body.position.y = (Math.random() - 0.5) * 10;
-                } while (Math.abs(o.body.position.x) < 20 && Math.abs(o.body.position.y) < 20 )
-                o.body.velocity = (new cv3(Math.random() * -200, Math.random() * 10, 0));
-                objects.push(o);
-            }
+//            for ( var i = 0; i < 50; i++) {
+//                var o = new SpaceObject();
+//                do{
+//                    o.body.position.x = (Math.random() - 0.5) * 100;
+//                    o.body.position.y = (Math.random() - 1) * 100;
+//                } while (Math.abs(o.body.position.x) < 20 && Math.abs(o.body.position.y) < 20 )
+//                
+//                o.body.velocity = (new cv3(Math.random() * 10, Math.random() * 10, 0));
+//                objects.push(o);
+//            }
+//            
+//            
+//            for ( var i = 0; i < 20; i++) {
+//                var o = new SpaceObject();
+//                do{
+//                    o.body.position.x = (Math.random() - 2) * 100;
+//                    o.body.position.y = (Math.random() - 0.5) * 100;
+//                } while (Math.abs(o.body.position.x) < 20 && Math.abs(o.body.position.y) < 20 )
+//                o.body.velocity = (new cv3(Math.random() * 100, Math.random() * 10, 0));
+//                objects.push(o);
+//            }
+//            
+//            for ( var i = 0; i < 20; i++) {
+//                var o = new SpaceObject();
+//                do{
+//                    o.body.position.x = (Math.random() + 4) * 100;
+//                    o.body.position.y = (Math.random() - 0.5) * 10;
+//                } while (Math.abs(o.body.position.x) < 20 && Math.abs(o.body.position.y) < 20 )
+//                o.body.velocity = (new cv3(Math.random() * -200, Math.random() * 10, 0));
+//                objects.push(o);
+//            }
             
             
         },
@@ -90,6 +90,7 @@ define([ "spaceobject", "enemyship", "asteroid", "background" ], function(SpaceO
                 objects[i].unload();
                 objects.splice(i, 1);
             }
+            this.background.unload();
 
         }
 

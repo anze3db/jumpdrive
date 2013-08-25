@@ -11,19 +11,10 @@ define(function() {
         state : 0,
         init : function() {
             var self = this;
-            this.initKeys();
             this.pc = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000),
                     this.pc.position.z = 50;
             orbit = new THREE.OrbitControls( this.pc, G.renderer.domElement );
 
-        },
-        initKeys : function(){
-            var self = this;
-            $(window).keypress(function(e){
-                if(e.charCode == 99){
-                    self.nextState();
-                }
-            });
         },
         shake : function(duration, vector) {
             shakeDuration = duration;
@@ -48,11 +39,7 @@ define(function() {
                 return;
             }
             
-            if (shake && timer < shakeDuration) {
-                //timer += delta;
-                
-                //console.log(res.z, res.y);
-                
+            if (G.player.dead) {
                 pos.y = pPos.y * 0.01 + pos.y*0.99;
                 pos.z = pos.z * 0.99 + 10*0.01;
                 

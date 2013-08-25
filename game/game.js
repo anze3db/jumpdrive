@@ -1,4 +1,4 @@
-define([ "camera", "player", "level" ], function(Camera, Player, Level) {
+define([ "camera", "player", "level", "input" ], function(Camera, Player, Level, Input) {
 
     var world, scene, camera, renderer, timeStep = 1 / 60, level, stats;
     var prevTime = +new Date();
@@ -13,6 +13,8 @@ define([ "camera", "player", "level" ], function(Camera, Player, Level) {
             G.initPlayer();
             G.initLights();
             G.initStats();
+            G.initInput();
+            
             G.loadLevel();
 
             G.update();
@@ -62,10 +64,19 @@ define([ "camera", "player", "level" ], function(Camera, Player, Level) {
             stats.domElement.style.zIndex = 100;
             document.body.appendChild(stats.domElement);
         },
+        initInput : function(){
+          this.input = new Input();  
+        },
         loadLevel : function() {
             this.level = level = new Level();
             world.gravity = level.gravity;
 
+        },
+        restartLevel : function(){
+            if(!player.dead) return;
+            player.reset();
+            level.unload();
+            G.loadLevel();
         },
         update : function() {
             requestAnimationFrame(G.update);

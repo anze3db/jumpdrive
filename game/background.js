@@ -45,7 +45,7 @@ define(["spaceobject"], function(SpaceObject){
         unload : function(){
             
             G.scene.remove(mesh);
-            
+            G.scene.remove(this.light);
             var obj,i;
             for (i = objects.length - 1; i >= 0; i--) {
                 obj = objects[i];

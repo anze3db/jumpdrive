@@ -2,13 +2,13 @@ define(function() {
     var SpaceObject = Class.extend({
         init : function() {
             var self = this;
-            this.initBody();
             this.initMesh();
+            this.initBody();
         },
 
         initMesh : function() {
-            this.geometry = this.geometry ? this.geometry :  new THREE.CubeGeometry(2, 2, 2);
-            this.material = new THREE.MeshLambertMaterial({
+            this.geometry = this.geometry ? this.geometry :  new THREE.CubeGeometry(10, 10, 10);
+            this.material = this.material ? this.material :new THREE.MeshLambertMaterial({
                 color: 'red' 
             });
             this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -17,7 +17,17 @@ define(function() {
         },
 
         initBody : function() {
-            this.body = new CANNON.RigidBody(1, new CANNON.Box(new CANNON.Vec3(1, 1, 1)));
+            
+            if(this.geometry instanceof THREE.CubeGeometry){
+                
+                this.body = new CANNON.RigidBody(1, new CANNON.Box(
+                        new CANNON.Vec3(this.geometry.width/2, this.geometry.height/2, this.geometry.depth/2)));
+            }
+            else if(this.geometry instanceof THREE.SphereGeometry){
+                console.log("adding a sphere body");
+                this.body = new CANNON.RigidBody(1, new CANNON.Sphere(this.geometry.radious));
+            }
+            
             G.world.add(this.body);
         },
         update : function() {

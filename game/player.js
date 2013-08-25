@@ -14,23 +14,19 @@ define([ "spaceobject" ], function(SpaceObject) {
         init : function() {
             var self = this;
 
-            this.geometry = new THREE.SphereGeometry(2, 6, 6);
+            this.geometry = new THREE.SphereGeometry(2, 10, 10);
             this._super();
             this.body.addEventListener("collide",function(e){
-                G.camera.shake(2000, e.contact.penetrationVec);
+                //G.camera.shake(2000, e.contact.penetrationVec);
                 player.dead = true;
             });
             
-            
             this.mesh.material.color.set(0x888888);
-            
-            
-            
             
             this.initLight();
             this.initText();
             this.initCollisionPlane();
-            this.initMouseEvents();
+            this.reset();
 
         },
         initLight : function() {
@@ -48,13 +44,13 @@ define([ "spaceobject" ], function(SpaceObject) {
             for(i = 0; i <= 10; i++){
                 cg = new THREE.TextGeometry( i < 10 ? "0"+i : i, 
                         {
-                    size: 1, height: 0.1, curveSegments: 3,
+                    size: 1, height: 0.0001, curveSegments: 3,
                     font: "helvetiker", style: "normal",
-                    bevelThickness: 1, bevelSize: 0.2, bevelEnabled: true,
+                    bevelThickness: 1, bevelSize: 0.05, bevelEnabled: true,
                     material: 0, extrudeMaterial: 1
                 });
                 text = new THREE.Mesh(cg, this.cmaterial);
-                text.position.z = 0.7;
+                text.position.z = 1;
                 G.scene.add(text);
                 this.textGeometries.push(text);
                 
@@ -64,7 +60,7 @@ define([ "spaceobject" ], function(SpaceObject) {
         },
         _getWorldCoords : function(event) {
 
-            var body = event.data.body;
+            var body = event.data ? event.data.body : G.player.body;
             var projector = new THREE.Projector();
             var camera = G.camera.pc;
             var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,
@@ -77,28 +73,22 @@ define([ "spaceobject" ], function(SpaceObject) {
             if(pc.length == 0) return new cv3(0,0,0);
             return pc[0].point;
         },
-        initMouseEvents : function() {
-            var self = this;
-
-            $(window).mousemove(self, function(e) {
-                e.preventDefault();
-                var self = e.data;
-                if (moving) {
-                    force = self.body.position.vsub(self._getWorldCoords(e)).unit().mult(speed);
-                }
-            });
-            $(window).mousedown(self, function(e) {
-                e.preventDefault();
-                var self = e.data;
-                moving = true;
+        eventMouseMove : function(e){
+            var self = G.player;
+            if (moving) {
                 force = self.body.position.vsub(self._getWorldCoords(e)).unit().mult(speed);
-            });
-            $(window).mouseup(self, function(e) {
-                e.preventDefault();
-                moving = false;
-                force = new CANNON.Vec3(0, 0, 0);
-            });
+            }
         },
+        eventMouseDown : function(e){
+            var self = G.player;
+            moving = true;
+            force = self.body.position.vsub(self._getWorldCoords(e)).unit().mult(speed);
+        },
+        eventMouseUp : function(e){
+            moving = false;
+            force = new CANNON.Vec3(0, 0, 0);
+        },
+
         initCollisionPlane : function() {
             var cpgeometry = new THREE.PlaneGeometry(3000, 3000);
             var cpmaterial = new THREE.MeshLambertMaterial({
@@ -107,6 +97,13 @@ define([ "spaceobject" ], function(SpaceObject) {
 
             collisionPlane = new THREE.Mesh(cpgeometry, cpmaterial);
             // G.scene.add(collisionPlane);
+        },
+        reset : function(){
+            this.dead = false;
+            this.body.position = new cv3(0,0,0);
+            this.body.angularVelocity = new cv3(0,0,10);
+            counter = 10;
+            counterDecr = 0;
         },
         update : function(delta) {
             this.body.velocity = this.body.velocity.mult(0.9).vadd(force.negate().mult(0.1));
@@ -131,24 +128,10 @@ define([ "spaceobject" ], function(SpaceObject) {
                     this.textGeometries[i].visible = false;
                 }
             }
-//            G.camera.pc.position.x = this.body.position.x;
-//            G.camera.pc.position.y = this.body.position.y - 50;
-//            G.camera.pc.position.z = 50;
-
-            
-//            this.pointLight.position = G.camera.pc.position;
-            
-             // g.camera.pc.position = this.body.position;
-            // g.camera.pc.position.z -= 50;
             
             this.pointLight.position.x = this.body.position.x;
             this.pointLight.position.y = this.body.position.y-2;
             this.pointLight.position.z = this.body.position.z+5;
-            //this.body.quaternion.copy(this.mesh.quaternion);
-            
-            //light.position = this.mesh.position;
-            //console.log(this.body.position.x, this.body.position.y, this.body.position.z)
-            //console.log(light.position.x, light.position.y, light.position.z)
         }
 
     });
