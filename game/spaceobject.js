@@ -7,7 +7,7 @@ define(function() {
         },
 
         initMesh : function() {
-            this.geometry = new THREE.CubeGeometry(2, 2, 2);
+            this.geometry = this.geometry ? this.geometry :  new THREE.CubeGeometry(2, 2, 2);
             this.material = new THREE.MeshLambertMaterial({
                 color: 'red' 
             });

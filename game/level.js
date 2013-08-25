@@ -1,11 +1,13 @@
-define([ "spaceobject", "asteroid", "background" ], function(SpaceObject, Asteroid, Background) {
+define([ "spaceobject", "enemyship", "asteroid", "background" ], function(SpaceObject, EnemyShip, Asteroid, Background) {
 
     var objects = [];
+    var constraints = [];
 
     var Level = Class.extend({
 
         gravity : new cv3(0, 0, 0),
         objects : objects,
+        constrainsts : constraints,
         init : function() {
             
             this.initBackground();
@@ -15,13 +17,27 @@ define([ "spaceobject", "asteroid", "background" ], function(SpaceObject, Astero
         initBackground : function(){
             this.background = new Background();
         },
+        initEnemies : function(){
+            
+            for(var i = 0; i < 5; i++){
+                var e = new EnemyShip();
+                e.body.position.y = 10;
+                e.body.position.x = (i-5)*10;
+
+                objects.push(e);
+                if(i > 0)
+                    constraints.push(new CANNON.DistanceConstraint(
+                            objects[i].body, objects[i-1].body, 10, 1000));
+            }
+            for(var i=0; i<constraints.length; i++)
+                G.world.addConstraint(constraints[i]);
+        },
         initObjects : function(){
             for ( var i = 0; i < 50; i++) {
                 var o = new SpaceObject();
                 do{
                     o.body.position.x = (Math.random() - 0.5) * 100;
                     o.body.position.y = (Math.random()) * 100;
-                    console.log(o.body.position.x, G.player.body.position.x);
                 } while (Math.abs(o.body.position.x) < 20 && Math.abs(o.body.position.y) < 20 )
                 o.body.velocity = (new cv3(Math.random() * 10, -1 * Math.random() * 10, 0));
                 objects.push(o);

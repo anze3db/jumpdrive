@@ -5,18 +5,26 @@ define(function() {
     var shake = false;
     var shakeVector = new cv3(0,0,0);
     var directionalLight;
-    var state = 0;
+    var orbit;
 
     var Camera = Class.extend({
-
+        state : 0,
         init : function() {
             var self = this;
-
+            this.initKeys();
             this.pc = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000),
                     this.pc.position.z = 50;
+            orbit = new THREE.OrbitControls( this.pc, G.renderer.domElement );
 
         },
-
+        initKeys : function(){
+            var self = this;
+            $(window).keypress(function(e){
+                if(e.charCode == 99){
+                    self.nextState();
+                }
+            });
+        },
         shake : function(duration, vector) {
             shakeDuration = duration;
             timer = 0;
@@ -30,30 +38,13 @@ define(function() {
             var pos = this.pc.position;
             var playerPos = G.player.mesh.position;
             var pPos = G.player.body.position;
-            if(state == 0){
+            if(this.state == 0){
                 this.pc.lookAt(new THREE.Vector3(Game.player.body.position.x, 
                         Game.player.body.position.y, 0));
                 
             }
-            else if(state == 1){
-                pos.x = 0;
-                pos.y = 0;
-                pos.z = 50;
-                this.pc.lookAt(new THREE.Vector3(0,0,0));
-                return;
-            }
-            else if(state == 2){
-                pos.x = 0;
-                pos.y = 50;
-                pos.z = 0;
-                this.pc.lookAt(new THREE.Vector3(0,0,0));
-                return;
-            }
-            else if(state == 3){
-                pos.x = 50;
-                pos.y = 0;
-                pos.z = 0;
-                this.pc.lookAt(new THREE.Vector3(0,0,0));
+            else if(this.state == 1){
+                orbit.update();
                 return;
             }
             
@@ -63,18 +54,19 @@ define(function() {
                 //console.log(res.z, res.y);
                 
                 pos.y = pPos.y * 0.01 + pos.y*0.99;
+                pos.z = pos.z * 0.99 + 10*0.01;
                 
             } else {
                 shake = false;
                 pos.x = playerPos.x;
-                pos.y = playerPos.y - 50;
+                pos.y = playerPos.y - 30;
                 pos.z = 50;
             }
 
         },
         nextState : function(){
-            state += 1;
-            state %= 4;
+            this.state += 1;
+            this.state %= 2;
         }
     });
     return Camera;
