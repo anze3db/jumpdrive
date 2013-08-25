@@ -7,6 +7,7 @@
 body {
 	padding: 0px;
 	margin: 0px;
+	background-color: black;
 }
 canvas {
 	width: 100%;
@@ -45,9 +46,15 @@ p{
 	<script src="/libs/jquery-2.0.0.min.js"></script>
 	<script src="/libs/underscore-min.js"></script>
 	<script src="/libs/three.min.js"></script>
-	<script src="/libs/cannon.min.js"></script>
+	<script src="/libs/cannon.js"></script>
+	<script src="/libs/cannon.demo.js"></script>
 	<script src="/libs/hammer.min.js"></script>
 	<script src="/libs/howler.min.js"></script>
+	<script src="/libs/inheritance.js"></script>
+	<script>
+    tv3 = THREE.Vector3;
+    cv3 = CANNON.Vec3;
+	</script>
 	<script data-main="/game/main" src="/libs/require-min.js"></script>
 <script>
     

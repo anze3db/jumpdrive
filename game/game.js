@@ -1,67 +1,83 @@
-define([], function() {
+define([ "camera", "player", "level"], function(Camera, Player, Level) {
 
-    var world, mass, body, shape, timeStep = 1 / 60, camera, scene, renderer, geometry, material, mesh;
+    var world, scene, camera, renderer, timeStep = 1 / 60, level;
+    var prevTime = +new Date();
 
-    g = {
+    Game = {
 
         init : function() {
+ 
+            G.initThree();
+            G.initCannon();
+            G.initPlayer();
+            G.initLights();
+            
+            G.loadLevel();
 
-            g.initThree();
-            g.initCannon();
-            g.update();
+            G.update();
+            
+            
+            
 
         },
         initThree : function() {
-            scene = new THREE.Scene();
 
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 100);
-            camera.position.z = 5;
-            scene.add(camera);
+            this.scene = scene = new THREE.Scene();
 
-            geometry = new THREE.CubeGeometry(2, 2, 2);
-            material = new THREE.MeshBasicMaterial({
-                color : 0xff0000,
-                wireframe : true
-            });
-
-            mesh = new THREE.Mesh(geometry, material);
-            scene.add(mesh);
-
-            renderer = new THREE.CanvasRenderer();
+            this.renderer = renderer = new THREE.WebGLRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight);
-
             document.body.appendChild(renderer.domElement);
         },
         initCannon : function() {
-            world = new CANNON.World();
+
+            this.world = world = new CANNON.World();
             world.gravity.set(0, 0, 0);
             world.broadphase = new CANNON.NaiveBroadphase();
-            world.solver.iterations = 10;
-
-            shape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
-            mass = 1;
-            body = new CANNON.RigidBody(mass, shape);
-            body.angularVelocity.set(0, 10, 0);
-            body.angularDamping = 0.5;
-            world.add(body);
+            world.solver.iterations = 1;
+        },
+        initPlayer : function() {
+            this.camera = camera = new Camera();
+            this.player = player = new Player();
+        },
+        initLights : function(){
+            
+            
+//             add subtle ambient lighting
+            
+            // directional lighting
+            var light = new THREE.Light( 0x111111 ); // soft white light
+            scene.add( light );
+            
+        },
+        loadLevel : function(){
+            this.level = level = new Level();
+            world.gravity = level.gravity;
+            
         },
         update : function() {
-            requestAnimationFrame(g.update);
-            g.updatePhysics();
-            g.render();
+            requestAnimationFrame(G.update);
+            G.updatePhysics();
+            G.render();
         },
-        updatePhysics : function(){
-            // Step the physics world
-            world.step(timeStep);
+        updatePhysics : function() {
 
-            // Copy coordinates from Cannon.js to Three.js
-            body.position.copy(mesh.position);
-            body.quaternion.copy(mesh.quaternion);  
+            var delta = new Date() - prevTime;
+            prevTime = +new Date();
+            
+            camera.update(delta);
+            if(player.dead) return;
+            
+            // Step the physics world
+            player.update(delta);
+            world.step(timeStep);
+            
+            level.update(delta);
+            
         },
         render : function() {
-            renderer.render( scene, camera );
+            renderer.render(scene, this.camera.pc);
         }
 
     };
-    return g;
+    return Game;
 });
