@@ -1,9 +1,8 @@
 define(function() {
     var SpaceObject = Class.extend({
-        init : function(nobody) {
+        init : function() {
             var self = this;
-            this.nobody = nobody;
-            if(!this.nobody) this.initBody();
+            this.initBody();
             this.initMesh();
         },
 
@@ -22,12 +21,11 @@ define(function() {
             G.world.add(this.body);
         },
         update : function() {
-            if(this.nobody) return;
             this.body.position.copy(this.mesh.position);
             this.body.quaternion.copy(this.mesh.quaternion);
         },
         unload : function() {
-            if(this.nobody) G.world.remove(this.body);
+            G.world.remove(this.body);
             G.scene.remove(this.mesh);
         }
     });

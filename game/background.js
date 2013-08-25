@@ -41,7 +41,6 @@ define(["spaceobject"], function(SpaceObject){
             
             
             G.scene.add(this.mesh);
-            console.log("Sphere added");
         },
         unload : function(){
             
@@ -56,4 +55,4 @@ define(["spaceobject"], function(SpaceObject){
         }
     });
     return Background;
-})
+});
