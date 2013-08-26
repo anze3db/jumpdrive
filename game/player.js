@@ -74,7 +74,7 @@ define([ "spaceobject" ], function(SpaceObject) {
                     
                     if ( !$('#story').is(':visible') ) 
                         $('#story').fadeIn('slow', function() {});
-                    $("#sc").html(" &gt; You've killed us all! <br /> &gt; But it's okay, press [right mouse button] to <strong style='color:green'>continue</strong>."); 
+                    $("#sc").html(" &gt; You've killed us all! <br /> &gt; But it's okay, press [left mouse button] to <strong style='color:green'>continue</strong>."); 
                     
                     
                     G.player.dead = true;

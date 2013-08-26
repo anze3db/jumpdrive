@@ -2,7 +2,7 @@ define(["levels/level", "spaceobject", "enemyship", "asteroid", "bgs/background0
 
     var Level0 = Level.extend({
 
-        story : "&gt; There seem to be a few <strong style='color:brown'>ASTEROIDS</strong> here. Try not to hit them. Move by holding the [right mouse button].<br /> &gt; I'll jump us to a safer spot when the cooldown reaches 0.",
+        story : "&gt; There seem to be a few <strong style='color:brown'>ASTEROIDS</strong> here. Try not to hit them. Move by holding the [left mouse button].<br /> &gt; I'll jump us to a safer spot when the cooldown reaches 0.",
         outStory : "&gt; Whoops, even more <strong style='color:brown'>ASTEROIDS</strong> at our next location. Brace yourself.",
         
         load : function(){

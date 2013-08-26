@@ -32,7 +32,7 @@ define([ "camera", "player", "levels/level6", "levels/level5", "levels/level4", 
 
             G.loadLevel();
             $('#story').fadeIn('slow', function() {});
-            $("#sc").html("&gt; Greetings captain, my name is Arnold J. Rimmer. I'm your new navigation officer.<br />&gt; I've heard good things about this ship, the Jump Drive is really impressive. It only has <strong style='color:blue;'>10 SECONDS</strong> of cooldown.<br />&gt; Press your [right mouse button] when you'll be ready for the first jump.");
+            $("#sc").html("&gt; Greetings captain, my name is Arnold J. Rimmer. I'm your new navigation officer.<br />&gt; I've heard good things about this ship, the Jump Drive is really impressive. It only has <strong style='color:blue;'>10 SECONDS</strong> of cooldown.<br />&gt; Press your [left mouse button] when you'll be ready for the first jump.");
             G.update();
 
         },
@@ -147,7 +147,7 @@ define([ "camera", "player", "levels/level6", "levels/level5", "levels/level4", 
             G.zoomIn = false;
             
             if(this.currentLevel == levels.length){
-                //$("#sc").html("&gt; <strong style='color:red'>GOOD</strong> news: It wasn't a black hole! <strong style='color:green'>BAD</strong> news: It's the end of the game. Thanks for playing! <br /> &gt; If this was too easy, try out the <strong style='color:purple'>hardcore mode</strong> [long press right mouse button]");
+                $("#sc").html("&gt; <strong style='color:red'>GOOD</strong> news: It wasn't a black hole! <strong style='color:green'>BAD</strong> news: It's the end of the game. Thanks for playing! <br /> &gt; If this was too easy, try out the <strong style='color:purple'>hardcore mode</strong> [long press left mouse button]");
             }
             else if(levels[this.currentLevel].story == ""){
                 $('#story').fadeOut('slow', function() {});
