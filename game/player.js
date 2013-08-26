@@ -67,7 +67,10 @@ define([ "spaceobject" ], function(SpaceObject) {
             if(new Date() - G.player.lastCollision  > colldown){
                 G.player.damage += G.hardcore ? 0.4 : 0.2;
                 G.player.lastCollision  = +new Date();
+                G.collisions += 1;
                 if(G.player.damage > 1){
+                    
+                    G.deaths += 1;
                     
                     if ( !$('#story').is(':visible') ) 
                         $('#story').fadeIn('slow', function() {});
@@ -134,6 +137,12 @@ define([ "spaceobject" ], function(SpaceObject) {
             if(G.camera.state == 1){
                 this.body.velocity = new cv3(0,0,0);
             }
+            
+            if(moving){
+                
+                G.traveled += delta;
+            }
+            
             counterDecr+=delta;
             if(!this.dead && counterDecr > 1000){
                 counter -= 1;

@@ -32,10 +32,14 @@ define(function(){
                 if(G.ended){
                     console.log("enabling hardcore");
                     $('#end').fadeOut('slow', function() {});
+                    $('#gstats').fadeOut('slow', function() {});
                     G.hardcore = true;
                     G.ended = false;
                     G.currentLevel = 0;
                     G.player.damage = 0;
+                    G.traveled = 0;
+                    G.collisions = 0;
+                    G.deaths;
                     G.loadLevel();
                 }
             });

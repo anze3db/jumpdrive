@@ -11,6 +11,9 @@ define([ "camera", "player", "levels/level6", "levels/level5", "levels/level4", 
         
         removeMe : [],
         currentLevel : 0,
+        collisions : 0,
+        deaths : 0,
+        traveled : 0,
         zoomOut : false,
         zoomIn : false,
         hardcore : false,
@@ -24,7 +27,7 @@ define([ "camera", "player", "levels/level6", "levels/level5", "levels/level4", 
             G.initCannon();
             G.initPlayer();
             G.initLights();
-            G.initStats();
+            //G.initStats();
             G.initInput();
 
             G.loadLevel();
@@ -161,7 +164,13 @@ define([ "camera", "player", "levels/level6", "levels/level5", "levels/level4", 
             if(this.hardcore){
                 $("#hcp").html("You are really <strong style='color:green'>awesome</strong>, but I bet you already knew that. Here enjoy this <a href='http://www.youtube.com/watch?v=E4TLto-nKfU'>video</a> as a reward for your hard work!");
                 $("#hardcore").fadeIn('slow', function() {});
+                
+                
             }
+            $('#gstats').fadeIn('slow', function() {});
+            $("#colls").html(G.collisions);
+            $("#deaths").html(G.deaths);
+            $("#traveled").html(G.traveled);
             this.ended = true;
         },
         update : function() {
@@ -188,7 +197,7 @@ define([ "camera", "player", "levels/level6", "levels/level5", "levels/level4", 
 
             world.step(timeStep);
 
-            stats.update();
+            //stats.update();
             level.update(delta);
 
         },
