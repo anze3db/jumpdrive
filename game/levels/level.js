@@ -1,17 +1,24 @@
-define([ "spaceobject", "enemyship", "asteroid", "background" ], function(SpaceObject, EnemyShip, Asteroid, Background) {
+define([ "spaceobject", "enemyship", "asteroid", "bgs/background" ], function(SpaceObject, EnemyShip, Asteroid, Background) {
 
     var objects = [];
     var constraints = [];
 
     var Level = Class.extend({
 
+        story : "",
+        outStory : "",
         gravity : new cv3(0, 0, 0),
         objects : objects,
         constrainsts : constraints,
-        init : function() {
-            
+        load : function(){
+            G.world.gravity = this.gravity.copy();
             this.initBackground();
             this.initObjects();
+            
+        },
+        init : function() {
+            
+            this.gravity = new cv3(0, 0, 0);
             
         },
         initBackground : function(){
@@ -91,7 +98,6 @@ define([ "spaceobject", "enemyship", "asteroid", "background" ], function(SpaceO
                 objects.splice(i, 1);
             }
             this.background.unload();
-
         }
 
     });

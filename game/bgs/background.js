@@ -1,10 +1,13 @@
 define(["spaceobject"], function(SpaceObject){
     var mesh;
     var light;
-    var objects = [];
     var Background = Class.extend({
+        objects : [],
         init: function(){
             this.initMesh();
+            for(var i = 0; i < this.objects.length; i++){
+                G.scene.add(this.objects[i]);
+            }
             
         },
         initMesh : function(){
@@ -17,11 +20,14 @@ define(["spaceobject"], function(SpaceObject){
             mesh.position.z = -900;
             mesh.position.y = 590;
             
+            this.objects.push(this.mesh);
+            
             this.light = light = new THREE.PointLight(0xffffff, 1, 700);
             light.position.y = 790;
             light.position.z = -450;
             light.position.x = 400;
-            G.scene.add(light);
+            //G.scene.add(light);
+            this.objects.push(this.light);
             
             this.geometry = new THREE.CubeGeometry(2, 2, 2);
             this.material = new THREE.MeshLambertMaterial({
@@ -34,23 +40,18 @@ define(["spaceobject"], function(SpaceObject){
                 o.position.x = (Math.random() - 0.5) *510;
                 o.position.y = (Math.random() - 0.5) *510;
                 o.position.z = (Math.random()+2) * -20;
-                G.scene.add(o);
-                objects.push(o);
+                this.objects.push(o);
 
             }
             
             
-            G.scene.add(this.mesh);
+            
         },
         unload : function(){
-            
-            G.scene.remove(mesh);
-            G.scene.remove(this.light);
-            var obj,i;
-            for (i = objects.length - 1; i >= 0; i--) {
-                obj = objects[i];
-                G.scene.remove(objects[i]);
-                objects.splice(i, 1);
+            var i;
+            for (i = this.objects.length - 1; i >= 0; i--) {
+                G.scene.remove(this.objects[i]);
+                this.objects.splice(i, 1);
             }
         }
     });

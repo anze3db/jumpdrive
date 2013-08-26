@@ -1,19 +1,9 @@
-define(function() {
-    var SpaceObject = Class.extend({
+define(['staticobject'], function(StaticObject) {
+    var SpaceObject = StaticObject.extend({
         init : function() {
             var self = this;
-            this.initMesh();
+            this._super();
             this.initBody();
-        },
-
-        initMesh : function() {
-            this.geometry = this.geometry ? this.geometry :  new THREE.CubeGeometry(10, 10, 10);
-            this.material = this.material ? this.material :new THREE.MeshLambertMaterial({
-                color: 'red' 
-            });
-            this.mesh = new THREE.Mesh(this.geometry, this.material);
-            G.scene.add(this.mesh);
-            
         },
 
         initBody : function() {
@@ -24,8 +14,7 @@ define(function() {
                         new CANNON.Vec3(this.geometry.width/2, this.geometry.height/2, this.geometry.depth/2)));
             }
             else if(this.geometry instanceof THREE.SphereGeometry){
-                console.log("adding a sphere body");
-                this.body = new CANNON.RigidBody(1, new CANNON.Sphere(this.geometry.radious));
+                this.body = new CANNON.RigidBody(1, new CANNON.Sphere(this.geometry.radius*0.8));
             }
             
             G.world.add(this.body);
@@ -35,8 +24,10 @@ define(function() {
             this.body.quaternion.copy(this.mesh.quaternion);
         },
         unload : function() {
+            
+            this._super();
             G.world.remove(this.body);
-            G.scene.remove(this.mesh);
+            
         }
     });
     return SpaceObject;

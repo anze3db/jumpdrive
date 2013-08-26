@@ -23,17 +23,39 @@ define(function(){
                 G.player.eventMouseUp();
             });
             Hammer(window).on("tap", function(event) {
+                if(!G.start){
+                    G.start = true;
+                }
                 G.restartLevel();
+            });
+            Hammer(window).on("hold", function(event) {
+                if(G.ended){
+                    console.log("enabling hardcore");
+                    $('#end').fadeOut('slow', function() {});
+                    G.hardcore = true;
+                    G.ended = false;
+                    G.currentLevel = 0;
+                    G.player.damage = 0;
+                    G.loadLevel();
+                }
             });
             
         },
         initKeys : function(){
             $(window).keypress(function(e){
+//                console.log(e);
+                if(!G.start){
+                    G.start = true;
+                    return
+                }
                 if(e.charCode == 99){ // c
                     G.camera.nextState();
                 }
                 if(e.charCode == 32){ // space
                     G.restartLevel();
+                }
+                if(e.charCode == 110){ // n
+                    G.startZoomOut(); 
                 }
             });
         }

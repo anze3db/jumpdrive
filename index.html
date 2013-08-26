@@ -6,15 +6,115 @@
 <style>
 body {
 	font-family: Monospace;
-	font-weight: bold;
 	background-color: #000000;
+	background: url(bg2.jpg) no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 	margin: 0px;
 	overflow: hidden;
+}
+a{
+	text-decoration: none;
+}
+
+#story {
+
+	width: 500px;
+	position: absolute;
+	background-color:rgba(0,0,0,0.5);
+	right: 20px;
+	bottom:20px;
+	color: white;
+	border: 1px solid white;
+	display:none;
+}
+img {
+	padding: 10px;
+	float: left;
+}
+h1{
+	padding: 0px;
+	margin: 0px;
+	font-size: 18px;
+}
+.content {
+	padding: 10px;
+}
+p {
+	margin-bottom:0px;
+}
+#end{
+	width: 500px;
+	position: absolute;
+	background-color:rgba(0,0,0,0.5);
+	right: 20px;
+	top:20px;
+	color: white;
+	border: 1px solid white;
+	display:none;
+}
+#hardcore{
+	width: 500px;
+	position: absolute;
+	background-color:rgba(0,0,0,0.5);
+	left: 20px;
+	top:20px;
+	color: gold;
+	border: 1px solid gold;
+	display:none;
+}
+
+#gstats{
+	width: 500px;
+	position: absolute;
+	background-color:rgba(0,0,0,0.5);
+	left: 20px;
+	bottom:20px;
+	color: white;
+	border: 1px white gold;
+	display:none;
 }
 
 </style>
 </head>
 <body>
+	<div id="story"><img src="face.png" /><div class="content"><h1>Navigation Officer Arnold J. Rimmer says:</h1>
+	<p id="sc">
+	
+	</p>
+	
+	</div><div style="clear:both"></div></div>
+	
+	<div id="hardcore"><div class="content"><h1>You've done it, you made it through the hardcore mode!</h1>
+	<p id="hcp">
+	</p>
+	
+	</div><div style="clear:both"></div></div>
+	
+	<div id="end"><div class="content"><h1>The End</h1>
+	<p>
+	<strong style='color:green'>GOOD</strong> news: It isn't a black hole! <strong style='color:red'>BAD</strong> news: It's the end of the game.
+	</p>
+	<p>
+	Thank you for playing!
+	</p>
+	<p>
+	This game was made for <a href="http://www.ludumdare.com/compo/ludum-dare-27/">LudumDare 27</a> game jam. If you enjoyed playing it let me know on twitter (<a href="">@smotko</a>)!
+	
+	</p>
+	<p>
+	The awesome music loop is from SoundCloud <a href="https://soundcloud.com/nickleus/anthem-of-the-cosmos-last-man-in-space-music-to-fall-asleep-too-in-a-dark-and-lonely-room" >SoundCloud</a>
+	</p>
+	<p>
+	
+	But wait, there is more. If you're looking for a challange try out the <strong style="color:purple">HARDCORE MODE</strong>! To unlock [long press mouse button]
+	</p>
+	
+	</div><div style="clear:both"></div></div>
+	
+	
 	<script src="/libs/Stats.js"></script>
 	<script src="/libs/jquery-2.0.0.min.js"></script>
 	<script src="/libs/underscore-min.js"></script>
@@ -34,7 +134,15 @@ body {
 	</script>
 	<script data-main="/game/main" src="/libs/require-min.js"></script>
 <script>
-    
+var sound = new Howl({
+    urls: ['bgsound.mp3'],
+    autoplay: true,
+    loop: true,
+    volume: 0.5,
+    onend: function() {
+      console.log('Finished!');
+    }
+  }); 
 
 
 </script>

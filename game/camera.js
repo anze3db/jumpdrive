@@ -3,7 +3,7 @@ define(function() {
     var timer = 0;
     var shakeDuration = 0;
     var shake = false;
-    var shakeVector = new cv3(0,0,0);
+    var shakeVector = new cv3(0, 0, 0);
     var directionalLight;
     var orbit;
 
@@ -13,7 +13,7 @@ define(function() {
             var self = this;
             this.pc = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000),
                     this.pc.position.z = 50;
-            orbit = new THREE.OrbitControls( this.pc, G.renderer.domElement );
+            orbit = new THREE.OrbitControls(this.pc, G.renderer.domElement);
 
         },
         shake : function(duration, vector) {
@@ -29,20 +29,24 @@ define(function() {
             var pos = this.pc.position;
             var playerPos = G.player.mesh.position;
             var pPos = G.player.body.position;
-            if(this.state == 0){
-                this.pc.lookAt(new THREE.Vector3(Game.player.body.position.x, 
-                        Game.player.body.position.y, 0));
-                
-            }
-            else if(this.state == 1){
+            if (this.state == 0) {
+                this.pc.lookAt(new THREE.Vector3(Game.player.body.position.x, Game.player.body.position.y, 0));
+
+            } else if (this.state == 1) {
                 orbit.update();
                 return;
             }
-            
-            if (G.player.dead) {
-                pos.y = pPos.y * 0.01 + pos.y*0.99;
-                pos.z = pos.z * 0.99 + 10*0.01;
-                
+
+            if (G.zoomOut || G.zoomIn) {
+
+                pos.x = playerPos.x;
+                pos.y = playerPos.y - 30;
+                pos.z = playerPos.z + 50;
+                this.pc.lookAt(new THREE.Vector3(Game.player.body.position.x, Game.player.body.position.y,
+                        Game.player.body.position.z));
+            } else if (G.player.dead) {
+                pos.y = pPos.y * 0.01 + pos.y * 0.99;
+                pos.z = pos.z * 0.99 + 10 * 0.01;
             } else {
                 shake = false;
                 pos.x = playerPos.x;
@@ -51,7 +55,7 @@ define(function() {
             }
 
         },
-        nextState : function(){
+        nextState : function() {
             this.state += 1;
             this.state %= 2;
         }

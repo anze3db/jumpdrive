@@ -7,19 +7,20 @@ define([ "spaceobject" ], function(SpaceObject) {
     var speed = 20;
     var counter = 10;
     var counterDecr = 0;
+    var colldown = 100;
+    
 
     var Player = SpaceObject.extend({
 
         dead : false,
+        damage : 0,
+        lastCollision : 0,
         init : function() {
             var self = this;
-
+            this.lastCollision = 0;
             this.geometry = new THREE.SphereGeometry(2, 10, 10);
             this._super();
-            this.body.addEventListener("collide",function(e){
-                //G.camera.shake(2000, e.contact.penetrationVec);
-                player.dead = true;
-            });
+            this.body.addEventListener("collide",self.collision);
             
             this.mesh.material.color.set(0x888888);
             
@@ -27,6 +28,10 @@ define([ "spaceobject" ], function(SpaceObject) {
             this.initText();
             this.initCollisionPlane();
             this.reset();
+            this.body.position.z = 2800;
+            G.zoomOut = true;
+            this.dead = true;
+            
 
         },
         initLight : function() {
@@ -50,12 +55,31 @@ define([ "spaceobject" ], function(SpaceObject) {
                     material: 0, extrudeMaterial: 1
                 });
                 text = new THREE.Mesh(cg, this.cmaterial);
-                text.position.z = 1;
                 G.scene.add(text);
                 this.textGeometries.push(text);
                 
             }
             
+            
+        },
+        collision : function(e){
+            if(counter > 9) return;
+            if(new Date() - G.player.lastCollision  > colldown){
+                G.player.damage += G.hardcore ? 0.4 : 0.2;
+                G.player.lastCollision  = +new Date();
+                if(G.player.damage > 1){
+                    
+                    if ( !$('#story').is(':visible') ) 
+                        $('#story').fadeIn('slow', function() {});
+                    $("#sc").html(" &gt; You've killed us all! <br /> &gt; But it's okay, press [right mouse button] to <strong style='color:green'>continue</strong>."); 
+                    
+                    
+                    G.player.dead = true;
+                    if(G.hardcore){
+                        G.currentLevel = 0;
+                    }
+                }
+            }
             
         },
         _getWorldCoords : function(event) {
@@ -99,8 +123,8 @@ define([ "spaceobject" ], function(SpaceObject) {
             // G.scene.add(collisionPlane);
         },
         reset : function(){
+            if(this.dead) this.damage = 0;
             this.dead = false;
-            this.body.position = new cv3(0,0,0);
             this.body.angularVelocity = new cv3(0,0,10);
             counter = 10;
             counterDecr = 0;
@@ -111,16 +135,44 @@ define([ "spaceobject" ], function(SpaceObject) {
                 this.body.velocity = new cv3(0,0,0);
             }
             counterDecr+=delta;
-            if(counterDecr > 1000){
+            if(!this.dead && counterDecr > 1000){
                 counter -= 1;
                 counterDecr = 0;
+                if(counter < 0 && !G.ended){
+                    G.startZoomOut();
+                }
                 
             }
+            if(G.ended || !G.start){
+                counter = 10;
+            }
+            
+            if(G.zoomOut == true){
+                this.body.position.z = 0.99 * this.body.position.z + 0.01*900;
+                this.body.position.y = 0.9 * this.body.position.y + 0.1*0;
+                this.body.position.x = 0.9 * this.body.position.x + 0.1*0;
+                counter = 10;
+                counterRecr = 0;
+                if(this.body.position.z > 800){
+                    this.body.position.z = 800;
+                    if(G.start) G.startZoomIn();
+                }
+            }
+            else if(G.zoomIn == true){
+                this.body.position.z = 0.99 * this.body.position.z + 0.1*-10;
+                counter = 10;
+                counterRecr = 0;
+                if(this.body.position.z < 0){
+                    
+                    G.stopZoomIn();
+                }
+            }
             this._super();
-            this.body.position.z = 0;
+            //this.body.position.z = 0;
             for(var i = 0; i < this.textGeometries.length; i++){
                 this.textGeometries[i].position.x = this.mesh.position.x-0.8;
                 this.textGeometries[i].position.y = this.mesh.position.y-0.5;
+                this.textGeometries[i].position.z = this.mesh.position.z+1;
                 if(i == counter){
                     this.textGeometries[i].visible = true;
                 }
@@ -128,10 +180,11 @@ define([ "spaceobject" ], function(SpaceObject) {
                     this.textGeometries[i].visible = false;
                 }
             }
-            
+            this.material.color.setRGB(1, 1*(1-this.damage),1*(1-this.damage));
             this.pointLight.position.x = this.body.position.x;
             this.pointLight.position.y = this.body.position.y-2;
             this.pointLight.position.z = this.body.position.z+5;
+            
         }
 
     });
